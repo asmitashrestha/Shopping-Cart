@@ -1,12 +1,16 @@
 import React from "react";
-import {useDispatch} from 'react-redux'
-import { addToCart } from "../store/slices/cart-slice";
+import {useDispatch, useSelector} from 'react-redux'
+import { addToCart, removeFromCart } from "../store/slices/cart-slice";
 
 const ProductList = ({ item }) => {
 const dispatch = useDispatch()
+const {cart} = useSelector(state => state)
 
   const handleAddToCart = ()=>{
     dispatch(addToCart(item))
+  }
+  const handleRemoveFromCart = ()=>{
+    dispatch(removeFromCart(item.id))
   }
   return (
     <div className="product-box">
@@ -18,7 +22,13 @@ const dispatch = useDispatch()
       </div>
       <div className="add-cart">
       <p>Rs.{item.price}</p>
-      <button onClick={handleAddToCart}>Add to Cart</button>
+      <button onClick={cart.some(items => items.id === item.id ) ? handleRemoveFromCart
+        : handleAddToCart}>
+        {
+          cart.some(items => items.id === item.id ) ?"Remove from cart"
+          :"Add to cart"
+        }
+      </button>
       </div>
     </div>
   );
